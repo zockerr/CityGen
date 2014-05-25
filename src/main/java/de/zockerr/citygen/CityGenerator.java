@@ -30,8 +30,8 @@ public class CityGenerator implements IWorldGenerator {
 		int x = (int) (chunkX * 16 + random.nextDouble() * 16);
 		int z = (int) (chunkZ * 16 + random.nextDouble() * 16);
 		Logger log = LogManager.getLogger("CityGen");
-		int maxCellsX = 2;
-		int maxCellsZ = 2;
+		int maxCellsX = 20;
+		int maxCellsZ = 20;
 		int level1Height = world.getHeightValue(x, z);
 		int level2Height = level1Height + 4;
 		HashMap<ImmutableTriple<Integer, Integer, Integer>, ImmutablePair<Block, Byte>> cityBuffer = new HashMap<ImmutableTriple<Integer, Integer, Integer>, ImmutablePair<Block, Byte>>();
@@ -181,6 +181,21 @@ public class CityGenerator implements IWorldGenerator {
 		log.log(Level.INFO,"placed level 2 NS bridges");
 		
 		//Fill E windows
+		fillEWindows(x, z, maxCellsX, maxCellsZ, level1Height, level2Height,
+				cityBuffer, units, ewBridges);
+		
+		//Fill W windows
+		fillWWindows(x, z, maxCellsX, maxCellsZ, level1Height, level2Height,
+				cityBuffer, units, ewBridges);
+		
+		//Fill S windows
+		fillSWindows(x, z, maxCellsX, maxCellsZ, level1Height, level2Height,
+				cityBuffer, nsBridges, units);
+		
+		//Fill N windows
+		fillNWindows(x, z, maxCellsX, maxCellsZ, level1Height, level2Height,
+				cityBuffer, units, nsBridges);
+		
 		
 		
 		
@@ -188,6 +203,102 @@ public class CityGenerator implements IWorldGenerator {
 		SchematicPlacer.placeBufferedCity(cityBuffer, world);
 		log.log(Level.INFO,"committed buffer swap");
 		
+	}
+
+
+
+	private void fillNWindows(
+			int x,
+			int z,
+			int maxCellsX,
+			int maxCellsZ,
+			int level1Height,
+			int level2Height,
+			HashMap<ImmutableTriple<Integer, Integer, Integer>, ImmutablePair<Block, Byte>> cityBuffer,
+			HashMap<String, String> units, HashMap<String, Boolean> nsBridges) {
+		for(int i = 0; i<maxCellsX; i++){
+			for(int j = 0; j<maxCellsZ; j++){
+				if(j==0||nsBridges.get((x+i*9)+" "+level1Height+" "+(z+(j-1)*9))==false){
+					if(j==0||!nsBridges.get((x+i*9)+" "+level2Height+" "+(z+(j-1)*9))){
+						if(!units.get((x+i*9)+" "+level2Height+" "+(z+j*9)).contains("x")){
+							SchematicPlacer.addToBuffer(cityBuffer, x+i*9+1, level2Height, z+j*9, "citygen:schematics/basic/windowFill/level2/n_var0.schematic");
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+	private void fillSWindows(
+			int x,
+			int z,
+			int maxCellsX,
+			int maxCellsZ,
+			int level1Height,
+			int level2Height,
+			HashMap<ImmutableTriple<Integer, Integer, Integer>, ImmutablePair<Block, Byte>> cityBuffer,
+			HashMap<String, Boolean> nsBridges, HashMap<String, String> units) {
+		for(int i = 0; i<maxCellsX; i++){
+			for(int j = 0; j<maxCellsZ; j++) {
+				if((j+1)==maxCellsZ||nsBridges.get((x+i*9)+" "+level1Height+" "+(z+j*9))==false){
+					if((j+1)==maxCellsZ||nsBridges.get((x+i*9)+" "+level2Height+" "+(z+j*9))==false){
+						if(!units.get((x+i*9)+" "+level2Height+" "+(z+j*9)).contains("x")){
+							SchematicPlacer.addToBuffer(cityBuffer, x+i*9+1, level2Height, z+j*9+4, "citygen:schematics/basic/windowFill/level2/s_var0.schematic");
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+	private void fillWWindows(
+			int x,
+			int z,
+			int maxCellsX,
+			int maxCellsZ,
+			int level1Height,
+			int level2Height,
+			HashMap<ImmutableTriple<Integer, Integer, Integer>, ImmutablePair<Block, Byte>> cityBuffer,
+			HashMap<String, String> units, HashMap<String, Boolean> ewBridges) {
+		for(int i = 0; i<maxCellsX; i++){
+			for(int j = 0; j<maxCellsZ; j++){
+				if(i==0||ewBridges.get((x+(i-1)*9)+" "+level1Height+" "+(z+j*9))==false){
+					if(i==0||ewBridges.get((x+(i-1)*9)+" "+level2Height+" "+(z+j*9))==false){
+						if(!units.get((x+i*9)+" "+level2Height+" "+(z+j*9)).contains("x")){
+							SchematicPlacer.addToBuffer(cityBuffer, x+i*9, level2Height, z+j*9+1, "citygen:schematics/basic/windowFill/level2/w_var0.schematic");
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+	private void fillEWindows(
+			int x,
+			int z,
+			int maxCellsX,
+			int maxCellsZ,
+			int level1Height,
+			int level2Height,
+			HashMap<ImmutableTriple<Integer, Integer, Integer>, ImmutablePair<Block, Byte>> cityBuffer,
+			HashMap<String, String> units, HashMap<String, Boolean> ewBridges) {
+		for(int i = 0; i<maxCellsX; i++){
+			for(int j = 0; j<maxCellsZ; j++){
+				if((i+1)==maxCellsX||ewBridges.get((x+i*9)+" "+level1Height+" "+(z+j*9))==false){
+					if((i+1)==maxCellsX||ewBridges.get((x+i*9)+" "+level2Height+" "+(z+j*9))==false){
+						if(!units.get((x+i*9)+" "+level2Height+" "+(z+j*9)).contains("x")){
+							SchematicPlacer.addToBuffer(cityBuffer, x+i*9+4, level2Height, z+j*9+1, "citygen:schematics/basic/windowFill/level2/e_var0.schematic");
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	
