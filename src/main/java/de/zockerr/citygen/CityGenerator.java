@@ -127,7 +127,7 @@ public class CityGenerator implements IWorldGenerator {
 		// Stairs: East(+x)
 		HashMap<String, Boolean> eStairs = new HashMap<String, Boolean>();
 		placeEastStairs(random, cityBuffer, x, z, maxCellsX, maxCellsZ,
-				level1Height, ewBridges, nsBridges, wHoles, eStairs);
+				level1Height,0, ewBridges, nsBridges, wHoles, eStairs,1);
 		log.log(Level.INFO,"placed level 1 east stairs");
 
 		// Stairs: West(-x)
@@ -195,6 +195,8 @@ public class CityGenerator implements IWorldGenerator {
 		//Fill N windows
 		fillNWindows(x, z, maxCellsX, maxCellsZ, level1Height, level2Height,
 				cityBuffer, units, nsBridges);
+		
+		//Place E stairs
 		
 		
 		
@@ -450,10 +452,10 @@ public class CityGenerator implements IWorldGenerator {
 	}
 
 	private void placeEastStairs(Random random, HashMap<ImmutableTriple<Integer, Integer, Integer>, ImmutablePair<Block, Byte>> cityBuffer, int x, int z,
-			int maxCellsX, int maxCellsZ, int height,
+			int maxCellsX, int maxCellsZ, int height, int belowHeight,
 			HashMap<String, Boolean> ewBridges,
 			HashMap<String, Boolean> nsBridges,
-			HashMap<String, Boolean> wHoles, HashMap<String, Boolean> eStairs) {
+			HashMap<String, Boolean> wHoles, HashMap<String, Boolean> eStairs, int level) {
 		for (int i = 0; i < maxCellsX; i++) {
 			for (int j = 0; j < maxCellsZ; j++) {
 				if ((i + 1) < maxCellsX
@@ -468,20 +470,23 @@ public class CityGenerator implements IWorldGenerator {
 							if (i == 0
 									|| ewBridges.get((x + (i - 1) * 9) + " "
 											+ height + " " + (z + j * 9)) == false) {
-								if ((i + 1) >= maxCellsX
+								if (level>1||(i + 1) >= maxCellsX
 										|| wHoles.get((x + i * 9) + " "
 												+ height + " " + (z + j * 9)) == false) {
-									if ((j - 1) < 0
+									if (level>1||(j - 1) < 0
 											|| wHoles.get((x + i * 9) + " "
 													+ height + " "
 													+ (z + (j - 1) * 9)) == false) {
-										SchematicPlacer.addToBuffer(cityBuffer, x
+										if(level == 1||(i>0)&&ewBridges.get((x+(i-1)*9)+" "+belowHeight+" "+(z+j*9))==true){
+											SchematicPlacer.addToBuffer(cityBuffer, x
 												+ i * 9, height, z + j * 9,
-												"citygen:schematics/basic/stairs/level1/e_var"
+												"citygen:schematics/basic/stairs/level"+level+"/e_var"
 														+ random.nextInt(2)
 														+ ".schematic");
-										eStairs.put((x + i * 9) + " " + height
-												+ " " + (z + j * 9), true);
+											eStairs.put((x + i * 9) + " " + height
+													+ " " + (z + j * 9), true);
+										}
+										
 									}
 								}
 							}
