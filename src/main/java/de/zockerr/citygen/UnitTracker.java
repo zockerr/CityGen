@@ -67,40 +67,40 @@ public class UnitTracker {
 	public void putUnit(int x, int y, int z, String config){
 		units[x][y][z] = config;
 	}
-	public void putEWBridge(int x, int y, int z){
-		ewBridges[x][y][z] = true;
+	public void putEWBridge(int x, int y, int z, boolean value){
+		ewBridges[x][y][z] = value;
 	}
 	
-	public void putNSBridge(int x, int y, int z){
+	public void putNSBridge(int x, int y, int z, boolean value){
 		nsBridges[x][y][z] = true;
 	}
 	
-	public void putEHole(int x, int y, int z){
+	public void putEHole(int x, int y, int z, boolean value){
 		eHoles[x][y][z] = true;
 	}
-	public void putWHole(int x, int y, int z){
+	public void putWHole(int x, int y, int z, boolean value){
 		wHoles[x][y][z] = true;
 	}
-	public void putSHole(int x, int y, int z){
+	public void putSHole(int x, int y, int z, boolean value){
 		sHoles[x][y][z] = true;
 	}
-	public void putNHole(int x, int y, int z){
+	public void putNHole(int x, int y, int z, boolean value){
 		nHoles[x][y][z] = true;
 	}
-	public void putNoneHole(int x, int y, int z){
+	public void putNoneHole(int x, int y, int z, boolean value){
 		noneHoles[x][y][z] = true;
 	}
 	
-	public void putEStairs(int x, int y, int z){
+	public void putEStairs(int x, int y, int z, boolean value){
 		eStairs[x][y][z] = true;
 	}
-	public void putWStairs(int x, int y, int z){
+	public void putWStairs(int x, int y, int z, boolean value){
 		wStairs[x][y][z] = true;
 	}
-	public void putSStairs(int x, int y, int z){
+	public void putSStairs(int x, int y, int z, boolean value){
 		sStairs[x][y][z] = true;
 	}
-	public void putNStairs(int x, int y, int z){
+	public void putNStairs(int x, int y, int z, boolean value){
 		nStairs[x][y][z] = true;
 	}
 	
