@@ -193,7 +193,7 @@ public class CityGenerator implements IWorldGenerator {
 		
 		//Fill S windows
 		fillSWindows(x, z, maxCellsX, maxCellsZ, level1Height, level2Height,
-				cityBuffer, nsBridges, units);
+				cityBuffer, nsBridges, units, tracker);
 		
 		//Fill N windows
 		fillNWindows(x, z, maxCellsX, maxCellsZ, level1Height, level2Height,
@@ -223,9 +223,11 @@ public class CityGenerator implements IWorldGenerator {
 			HashMap<String, String> units, HashMap<String, Boolean> nsBridges, UnitTracker tracker) {
 		
 		PlacementRule r = new PlacementRule();
-		r.addNSBridgeCondition(0, 1, -1, false);
-		r.addNSBridgeCondition(0, 2, -1, true);
-		r.addUnitCondition(0, 2, 0, "");
+		r.addNSBridgeCondition(0, -1, -1, false);
+		r.addNSBridgeCondition(0, 0, -1, false);
+		r.addUnitCondition(0, 0, 0, "");
+		r.addEHoleCondition(-1, -1, -1, false);
+		r.addWHoleCondition(0, -1, -1, false);
 		
 		for(int i = 0; i<maxCellsX; i++){
 			for(int j = 0; j<maxCellsZ; j++){
@@ -246,15 +248,19 @@ public class CityGenerator implements IWorldGenerator {
 			int level1Height,
 			int level2Height,
 			HashMap<ImmutableTriple<Integer, Integer, Integer>, ImmutablePair<Block, Byte>> cityBuffer,
-			HashMap<String, Boolean> nsBridges, HashMap<String, String> units) {
+			HashMap<String, Boolean> nsBridges, HashMap<String, String> units, UnitTracker tracker) {
+		
+		PlacementRule r = new PlacementRule();
+		r.addNSBridgeCondition(0, -1, 0, false);
+		r.addNSBridgeCondition(0, 0, 0, false);
+		r.addUnitCondition(0, 0, 0, "");
+		r.addEHoleCondition(-1, -1, 0, false);
+		r.addWHoleCondition(0, -1, 0, false);
+		
 		for(int i = 0; i<maxCellsX; i++){
 			for(int j = 0; j<maxCellsZ; j++) {
-				if((j+1)==maxCellsZ||nsBridges.get((x+i*9)+" "+level1Height+" "+(z+j*9))==false){
-					if((j+1)==maxCellsZ||nsBridges.get((x+i*9)+" "+level2Height+" "+(z+j*9))==false){
-						if(!units.get((x+i*9)+" "+level2Height+" "+(z+j*9)).contains("x")){
-							SchematicPlacer.addToBuffer(cityBuffer, x+i*9+1, level2Height, z+j*9+4, "citygen:schematics/basic/windowFill/level2/s_var0.schematic");
-						}
-					}
+				if(tracker.compliesRules(i, 2, j, r)){
+					SchematicPlacer.addToBuffer(cityBuffer, x+i*9+1, level2Height, z+j*9+4, "citygen:schematics/basic/windowFill/level2/s_var0.schematic");
 				}
 			}
 		}

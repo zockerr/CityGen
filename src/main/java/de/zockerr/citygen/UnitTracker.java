@@ -118,6 +118,8 @@ public class UnitTracker {
 					if(!units[testX][testY][testZ].contains(cond)){
 						return false;
 					}
+				}else if(units[testX][testY][testZ].contains("x")){
+					return false;
 				}
 				
 			}catch(ArrayIndexOutOfBoundsException e){
